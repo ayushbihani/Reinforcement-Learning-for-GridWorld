@@ -48,7 +48,18 @@ class Qlearn():
         max_next_state_value = np.amax(self.qtable[next_state])
         self.qtable[curr_state][action] += self.learning_rate*(reward + self.discount_factor*(max_next_state_value-self.qtable[curr_state][action]))
         
-    def extract_policy(self):
+    def extract_policy(self, state):
+        initial_state = state
         policy = []
-        initial_state = self.env.initial_state
-        return policy
+        total_reward = 0.0
+        while True:
+            self.env.render()
+            action = self.action(initial_state)
+            action_direction = self.env.get_action(action)
+            policy.append(action_direction)
+            next_state, reward, done = self.env.step(action)
+            total_reward += reward
+            initial_state = next_state
+            if done:
+                break
+        return {'policy':policy, 'reward':total_reward}

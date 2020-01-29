@@ -14,10 +14,10 @@ if __name__ == "__main__":
             env.render()
             action = QL.action(initial_state) 
             next_state, reward, done = env.step(action)
-            # print([initial_state, action, reward, next_state])
             QL.alternate_train([initial_state, action, reward, next_state])
-            #env.print_value_all(QL.qtable)
             initial_state = next_state
-            print(done)
             if done:
                 break
+    policy = (QL.extract_policy(env.restart()))
+    print(policy['policy'])
+    print("Total Reward: ", policy['reward'])

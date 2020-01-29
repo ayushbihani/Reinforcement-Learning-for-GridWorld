@@ -14,7 +14,7 @@ class Environment(tk.Tk):
         super(Environment, self).__init__()
         self.height = 5
         self.width = 5
-        self.actions = ['u','l','d','r']
+        self.actions = ['UP','LEFT','DOWN','RIGHT']
         self.title = "Dog Gridworld"
         self.images = self.get_images()
         self.canvas = self.create_env()
@@ -58,7 +58,7 @@ class Environment(tk.Tk):
         return self.get_state(self.canvas.coords(canvas_object))
     
     def restart(self):
-        time.sleep(0.2)
+        time.sleep(0.01)
         self.canvas.itemconfigure(self.text_msg, text="New Simulation")
         self.canvas.delete(self.apple_2)
         self.canvas.delete(self.apple_1)
@@ -77,37 +77,31 @@ class Environment(tk.Tk):
 
     def num_actions(self):
         return len(self.actions)
-
     
     def step(self, action):
         dog_state = self.canvas.coords(self.dog)
         new_state_coords = np.array([0, 0])
         self.render()
-        hit_wall = True
         #up
         if action == 0:
             if dog_state[1] > pixels:
                 new_state_coords[1] = -pixels
-                hit_wall = False
+                 
         #left
         elif action == 1:
             if dog_state[0] > pixels:
                 new_state_coords[0] = -pixels
-                hit_wall = False
+                 
         #down
         elif action == 2:
             if dog_state[1] < (self.height - 1)*pixels:
                 new_state_coords[1] = pixels
-                hit_wall = False
+                 
         #right
         elif action == 3:
             if dog_state[0] < (self.width-1)*pixels:
                 new_state_coords[0] = pixels
-                hit_wall = False
-
-        # if hit_wall:
-        #     return [self.get_state_no(self.dog), 0, False]
-        #x, y = dog_state[0] + new_state_coords[0], dog_state[1]+new_state_coords[1]
+                 
         self.canvas.move(self.dog, new_state_coords[0], new_state_coords[1])
         next_state = self.get_state_no(self.dog)
         
@@ -129,7 +123,26 @@ class Environment(tk.Tk):
         self.update()
         return next_state, reward, done
 
+    def get_action(self, index):
+        if(index >=0 and index <=3):
+            return self.actions[index]
+        return -1
+
+    def get_next_state(self, state_, action):
+        x, y = state_%self.width, state_/self.width
+        state = 0
+        if(action == 0):
+            state = (y-1)*self.width + x
+        elif(action == 1):
+            state = y*self.width + (x-1)
+        elif(action == 2):
+            state = (y+1)*self.width + x
+        else:
+            state =  y*self.width + (x+1)
+
+        return int(state) if state < self.num_states() else int(state_)
+
     def render(self):
-        time.sleep(0.1)
+        time.sleep(0.01)
         self.update()
         
