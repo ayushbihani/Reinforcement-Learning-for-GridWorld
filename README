@@ -1,10 +1,10 @@
-##An implementation of the gridworld example using the Q-learning algorithm
+## An implementation of the gridworld example using the Q-learning algorithm
 
 A simple implementation of gridworld by simulating a wildfire environment.
 A agent, here dog learns to collect both the apples without entering a fire zone using Q learning.
 
 While testing, I found that the path taken by the dog converges after the 35th simulation.
 
-###How to run
+### How to run
 
 python3 train.py
